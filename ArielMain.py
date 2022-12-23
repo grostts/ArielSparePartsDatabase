@@ -36,24 +36,83 @@ try:
     email_input = driver.find_element(By.ID,'Input_UserName')
     email_input.clear()
     email_input.send_keys(ariel_login)
-    time.sleep(5)
+    driver.implicitly_wait(10)
 
     # entering a password
     password_input = driver.find_element(By.ID,'Input_Password')
     password_input.clear()
     password_input.send_keys(ariel_password)
-    time.sleep(5)
+    driver.implicitly_wait(10)
 
     # press login button
     login_button_click = driver.find_element(By.XPATH, '//button[contains(@class, "")]').click()
+    driver.implicitly_wait(20)
     time.sleep(10)
+
+
+    # Open ariel parts page
+    driver.get(url='https://www.arielcorp.com/parts/portal/')
+    driver.implicitly_wait(10)
+
+    # press equipment button
+    equipment_button = driver.find_element(By.ID, 'tab-1449-btnInnerEl')
+    equipment_button.click()
+    driver.implicitly_wait(10)
+
+    print('Start downloading the bom files...')
+    counter = 0
+    for elem in serial_numbers:
+        # fill in the field with the serial number
+        text_field = driver.find_element(By.ID, 'textfield-1181-inputEl')
+        text_field.clear()
+        text_field.send_keys(elem)
+
+        # press search button
+        search_button = driver.find_element(By.ID, 'button-1186')
+        search_button.click()
+        driver.implicitly_wait(10)
+
+        try:
+            # press parts button
+            parts_button = driver.find_element(By.ID, 'button-1202-btnEl')
+            parts_button.click()
+            driver.implicitly_wait(10)
+            try:
+                # press view as list button
+                view_as_list_button = driver.find_element(By.ID, 'button-1246-btnEl')
+                view_as_list_button.click()
+                driver.implicitly_wait(10)
+
+                # downloading BOM file
+                download_button = driver.find_element(By.ID, 'button-1241-btnInnerEl')
+                download_button.click()
+                driver.implicitly_wait(10)
+            except:
+                # downloading BOM file
+                download_button = driver.find_element(By.ID, 'button-1241-btnInnerEl')
+                download_button.click()
+                driver.implicitly_wait(10)
+
+            # back to the equipment page
+            back = driver.find_element(By.ID, 'button-1288-btnInnerEl')
+            back.click()
+            driver.implicitly_wait(30)
+
+            counter += 1
+            current_time = time.time()
+
+            print(f'{counter}/ {total_sn} was downloaded. {round(current_time - start_time, 1)} seconds have passed.')
+
+        finally:
+            continue
+    time.sleep(10)
+
 
 except Exception as ex:
     print(ex)
 finally:
     driver.close()
     driver.quit()
-
 
 # Program runtime output
 end_time = time.time()
