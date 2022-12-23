@@ -4,7 +4,7 @@ from selenium.webdriver.common.by import By
 from AuthorizationData import ariel_password
 from AuthorizationData import ariel_login
 import pandas as pd
-
+import glob
 
 start_time = time.time()
 
@@ -113,6 +113,29 @@ except Exception as ex:
 finally:
     driver.close()
     driver.quit()
+
+
+# Create excel file
+# getting excel files to be merged from the Downloads
+path = "C:\\Users\\hp\\GitHubProjects\\ArielSparePartsDatabase\\Downloads"
+
+# read all the files with extension .xlsx i.e. excel
+filenames = glob.glob(path + "\*.xlsx")
+
+# empty data frame for the new output excel file with the merged excel files
+outputxlsx = pd.DataFrame()
+
+# for loop to iterate all excel files
+for file in filenames:
+   # using concat for excel files
+   # after reading them with read_excel()
+   df = pd.concat(pd.read_excel( file, sheet_name=None), ignore_index=True, sort=False)
+
+   # appending data of excel files
+   outputxlsx = outputxlsx.append( df, ignore_index=True)
+
+print(f'Final Excel sheet now generated at the same location: C:\\Users\\hp\\GitHubProjects\\ArielSparePartsDatabase\\Result_{file_name}.xlsx')
+outputxlsx.to_excel(f"C:\\Users\\hp\\GitHubProjects\\ArielSparePartsDatabase\\Result_{file_name}.xlsx", index=False)
 
 # Program runtime output
 end_time = time.time()
