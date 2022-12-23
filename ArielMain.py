@@ -1,8 +1,8 @@
 import time
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-from AuthorizationData import ariel_password
-from AuthorizationData import ariel_login
+from AuthorizationDataForGithub import ariel_password
+from AuthorizationDataForGithub import ariel_login
 import pandas as pd
 import glob
 
